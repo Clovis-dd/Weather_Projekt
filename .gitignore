@@ -5,6 +5,7 @@
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyd
 
 # Umgebungsvariablen
 .env
@@ -23,3 +24,33 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+
+
+# ==========================
+# Machine Learning Artefakte
+# ==========================
+
+# lokale ML Artefakte
+models/*.pkl
+models/**/*.pkl
+models/backups/
+models/reports/
+models/latest_training_model.pkl
+
+
+# ==========================
+# Tests / Coverage
+# ==========================
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+
+# ==========================
+# Build / Packaging
+# ==========================
+
+dist/
+build/
+*.egg-info/

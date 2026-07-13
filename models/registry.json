@@ -1,0 +1,106 @@
+{
+    "version": 3,
+    "champion": "weather_model_20260713_123322_851094",
+    "models": [
+        {
+            "name": "weather_model_20260712_071857",
+            "filename": "weather_model_20260712_071857.pkl",
+            "algorithm": "RandomForestRegressor",
+            "created_at": "2026-07-12T07:18:57.797672+00:00",
+            "metrics": {
+                "r2": 0.4689186193357463,
+                "mae": 3.869758333333312,
+                "rmse": 4.826967193826579
+            },
+            "status": "archived",
+            "feature_schema_version": "1.0",
+            "features": [
+                "temperature",
+                "feels_like",
+                "humidity",
+                "pressure",
+                "wind_speed",
+                "clouds",
+                "visibility",
+                "temperature_difference",
+                "wind_factor",
+                "humidity_factor"
+            ]
+        },
+        {
+            "name": "weather_model_20260712_211109",
+            "filename": "weather_model_20260712_211109.pkl",
+            "algorithm": "RandomForestRegressor",
+            "created_at": "2026-07-12T21:11:09.121644+00:00",
+            "metrics": {
+                "r2": 0.32566857673945837,
+                "mae": 4.205549999999981,
+                "rmse": 5.439143392575772
+            },
+            "feature_schema_version": "1.0",
+            "features": [
+                "temperature",
+                "feels_like",
+                "humidity",
+                "pressure",
+                "wind_speed",
+                "clouds",
+                "visibility",
+                "temperature_difference",
+                "wind_factor",
+                "humidity_factor"
+            ],
+            "status": "archived"
+        },
+        {
+            "name": "weather_model_20260712_212843",
+            "filename": "weather_model_20260712_212843.pkl",
+            "algorithm": "RandomForestRegressor",
+            "created_at": "2026-07-12T21:28:43.321575+00:00",
+            "metrics": {
+                "r2": 0.32566857673946037,
+                "mae": 4.205549999999974,
+                "rmse": 5.439143392575764
+            },
+            "feature_schema_version": "1.0",
+            "features": [
+                "temperature",
+                "feels_like",
+                "humidity",
+                "pressure",
+                "wind_speed",
+                "clouds",
+                "visibility",
+                "temperature_difference",
+                "wind_factor",
+                "humidity_factor"
+            ],
+            "status": "archived"
+        },
+        {
+            "name": "weather_model_20260713_123322_851094",
+            "filename": "weather_model_20260713_123322_851094.pkl",
+            "algorithm": "RandomForestRegressor",
+            "created_at": "2026-07-13T12:33:22.852636+00:00",
+            "metrics": {
+                "r2": 0.32566857673945315,
+                "mae": 4.205549999999995,
+                "rmse": 5.439143392575793
+            },
+            "feature_schema_version": "1.0",
+            "features": [
+                "temperature",
+                "feels_like",
+                "humidity",
+                "pressure",
+                "wind_speed",
+                "clouds",
+                "visibility",
+                "temperature_difference",
+                "wind_factor",
+                "humidity_factor"
+            ],
+            "status": "champion"
+        }
+    ]
+}

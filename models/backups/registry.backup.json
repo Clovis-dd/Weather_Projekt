@@ -1,0 +1,86 @@
+[
+    {
+        "model_name": "weather_model_v1",
+        "version": "v1",
+        "filename": "weather_model_v1_v1.pkl",
+        "created_at": "2026-07-11T21:48:27.745818+00:00",
+        "algorithm": "RandomForestRegressor",
+        "features": [
+            "temperature",
+            "feels_like",
+            "humidity",
+            "pressure",
+            "wind_speed",
+            "clouds",
+            "visibility"
+        ],
+        "metrics": {
+            "r2": 0.4689186193357492,
+            "mae": 3.869758333333305,
+            "rmse": 4.826967193826565
+        }
+    },
+    {
+        "model_name": "weather_model_v1",
+        "version": "v1",
+        "filename": "weather_model_v1_v1.pkl",
+        "created_at": "2026-07-11T21:57:59.155087+00:00",
+        "algorithm": "RandomForestRegressor",
+        "features": [
+            "temperature",
+            "feels_like",
+            "humidity",
+            "pressure",
+            "wind_speed",
+            "clouds",
+            "visibility"
+        ],
+        "metrics": {
+            "r2": 0.4689186193357464,
+            "mae": 3.869758333333312,
+            "rmse": 4.826967193826579
+        }
+    },
+    {
+        "model_name": "weather_model_v1",
+        "version": "v1",
+        "filename": "weather_model_v1_v1.pkl",
+        "created_at": "2026-07-11T22:03:56.448390+00:00",
+        "algorithm": "RandomForestRegressor",
+        "features": [
+            "temperature",
+            "feels_like",
+            "humidity",
+            "pressure",
+            "wind_speed",
+            "clouds",
+            "visibility"
+        ],
+        "metrics": {
+            "r2": 0.46891861933574575,
+            "mae": 3.869758333333319,
+            "rmse": 4.826967193826581
+        }
+    },
+    {
+        "model_name": "weather_model_v1",
+        "version": "v1",
+        "filename": "weather_model_v1_v1.pkl",
+        "created_at": "2026-07-11T22:28:44.345497+00:00",
+        "algorithm": "RandomForestRegressor",
+        "features": [
+            "temperature",
+            "feels_like",
+            "humidity",
+            "pressure",
+            "wind_speed",
+            "clouds",
+            "visibility"
+        ],
+        "metrics": {
+            "r2": 0.4689186193357492,
+            "mae": 3.869758333333305,
+            "rmse": 4.826967193826565
+        }
+    }
+]

@@ -1,0 +1,27 @@
+services:
+
+  weather-api:
+
+    build:
+      context: .
+
+    container_name:
+      weather-api
+
+
+    ports:
+      - "8000:8000"
+
+
+    volumes:
+
+      - ./models:/app/models
+
+
+    environment:
+
+      PYTHONUNBUFFERED: "1"
+
+
+    restart:
+      unless-stopped

@@ -1,25 +1,16 @@
 FROM python:3.14-slim
 
-
 WORKDIR /app
-
 
 COPY requirements.txt .
 
-
-RUN pip install --no-cache-dir \
-    -r requirements.txt
-
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY backend ./backend
 COPY shared ./shared
-
-
-RUN mkdir -p /app/models
-
+COPY models ./models
 
 EXPOSE 8000
-
 
 CMD [
     "uvicorn",

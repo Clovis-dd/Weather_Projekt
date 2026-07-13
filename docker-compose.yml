@@ -21,6 +21,7 @@ services:
     environment:
 
       PYTHONUNBUFFERED: "1"
+      MODELS_DIR: "/app/models"
 
 
     restart:

@@ -17,7 +17,7 @@ API
 
 from __future__ import annotations
 
-
+import os
 from pathlib import Path
 
 from typing import Any
@@ -62,9 +62,11 @@ logger = get_logger(
 # Configuration
 # ======================================================
 
-
 MODELS_DIR = Path(
-    "models"
+    os.getenv(
+        "MODELS_DIR",
+        "models"
+    )
 )
 
 

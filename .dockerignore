@@ -1,22 +1,37 @@
-.venv
-__pycache__
-.pytest_cache
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 
-.git
+# Virtual Environment
+.venv/
+
+# Git
+.git/
 .gitignore
 
-tests
-docs
+# IDE
+.vscode/
+.idea/
 
-data
+# Tests / Cache
+.pytest_cache/
+.coverage
+htmlcov/
 
-logs
+# Logs
+logs/
+*.log
 
-frontend
-
-training
-
-*.pyc
-*.pyo
-
+# Environment
 .env
+
+# ML Artefakte
+models/*.pkl
+models/**/*.pkl
+models/backups/
+models/reports/
+
+# Training temporär
+*.joblib

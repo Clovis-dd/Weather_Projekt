@@ -159,9 +159,26 @@ def root():
     response_model=HealthResponse,
 )
 def health() -> HealthResponse:
+    """
+    Liefert den aktuellen Gesundheitsstatus der API.
+
+    Der Health-Endpoint darf niemals durch ein fehlendes
+    Modell abstürzen. Stattdessen wird lediglich geprüft,
+    ob das Champion-Modell erfolgreich geladen werden kann.
+    """
 
     champion = model_service.get_champion()
 
+    model_loaded = False
+
+    if champion is not None:
+        try:
+            model_service.get_model()
+            model_loaded = True
+        except Exception:
+            logger.warning(
+                "Champion model could not be loaded."
+            )
 
     return HealthResponse(
 
@@ -171,10 +188,7 @@ def health() -> HealthResponse:
 
         version="1.0.0",
 
-        model_loaded=(
-                model_service.get_model()
-                is not None
-        ),
+        model_loaded=model_loaded,
 
         active_model=(
             champion.name
@@ -205,9 +219,7 @@ def health() -> HealthResponse:
         ),
 
         uptime_seconds=(
-                datetime.now(UTC)
-                -
-                START_TIME
+            datetime.now(UTC) - START_TIME
         ).total_seconds(),
 
         utc_time=datetime.now(UTC),

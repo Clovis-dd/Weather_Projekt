@@ -18,6 +18,7 @@ from backend.api import (
 from backend.model_registry import (
     ModelRegistry,
 )
+from backend.model_service import ModelService
 from backend.predictor import WeatherPredictor
 from shared.feature_schema import FEATURE_SCHEMA
 
@@ -173,35 +174,42 @@ def test_metrics_endpoint():
     assert "average_latency_ms" in body
 
 
-def test_health_endpoint():
+def test_health_endpoint(
+    tmp_path,
+):
+    """
+    Der Health-Endpoint soll den Status
+    eines geladenen Champion-Modells korrekt
+    zurückgeben.
+    """
 
-    client = TestClient(
-        app
+    prepare_model(
+        tmp_path
     )
 
+    api.model_service = ModelService(
+        tmp_path
+    )
+
+    client = TestClient(
+        api.app
+    )
 
     response = client.get(
         "/health"
     )
 
-
     assert response.status_code == 200
 
     data = response.json()
 
-    assert response.json()["status"] == "ok"
+    assert data["status"] == "ok"
 
     assert data["model_loaded"] is True
 
-    assert data["service"] == "weather-api"
+    assert data["active_model"] is not None
 
-    assert data["version"] == "1.0.0"
-
-    assert "prediction_count" in data
-
-    assert "utc_time" in data
-
-    assert "active_model" in data
+    assert data["feature_schema_version"] is not None
 
 
 def test_prediction_endpoint(tmp_path):

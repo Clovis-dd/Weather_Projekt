@@ -25,6 +25,8 @@ Thumbs.db
 # Jupyter
 .ipynb_checkpoints/
 
+# Datenbank
+database/*.db
 
 # ==========================
 # Machine Learning Artefakte

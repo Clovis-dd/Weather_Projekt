@@ -343,6 +343,23 @@ def get_weather_by_coordinates(
     )
 
 
+def get_prediction_history() -> list[dict[str, Any]]:
+    """
+    Holt die komplette Vorhersagehistorie.
+    """
+
+    response = _session.get(
+
+        f"{settings.BACKEND_URL}/history",
+
+        timeout=settings.REQUEST_TIMEOUT,
+
+    )
+
+    response.raise_for_status()
+
+    return response.json()
+
 
 # ======================================================
 # Prediction

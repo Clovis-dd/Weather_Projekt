@@ -44,7 +44,6 @@ from shared.logger import (
 )
 
 
-
 logger = get_logger(
     __name__
 )
@@ -172,7 +171,6 @@ class WeatherPredictor:
         predicted_value = float(
             prediction[0]
         )
-
 
 
         result = {

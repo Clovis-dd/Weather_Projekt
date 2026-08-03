@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 from datetime import UTC, datetime
+from urllib import response
 
 from backend.middleware import RequestIDMiddleware
 
@@ -43,6 +44,13 @@ from backend.model_registry import ModelRegistry
 
 from backend.predictor import WeatherPredictor
 
+from backend.weather_service import (
+    WeatherService,
+    WeatherAPIError,
+    CityNotFoundError,
+    InvalidAPIKeyError,
+)
+
 from backend.prediction_monitor import (
     prediction_monitor,
 )
@@ -50,7 +58,24 @@ from backend.prediction_monitor import (
 from backend.model_service import ModelService
 
 from shared.logger import get_logger
-from shared.models import HealthResponse
+
+from shared.models import (
+    HealthResponse,
+    WeatherRequest,
+    WeatherResponse,
+    PredictionData,
+)
+
+
+from backend.database import SessionLocal
+
+from backend.repository import WeatherRepository
+
+from backend.models import WeatherHistory
+
+from shared.models import PredictionData
+
+
 
 logger = get_logger(
     __name__
@@ -114,6 +139,8 @@ def create_predictor() -> WeatherPredictor:
 
 predictor = create_predictor()
 
+weather_service = WeatherService()
+
 
 # ======================================================
 # Request Model
@@ -123,6 +150,10 @@ predictor = create_predictor()
 class WeatherInput(
     BaseModel
 ):
+
+    city: str
+
+    language: str = "de"
 
     temperature: float
 
@@ -284,6 +315,130 @@ def metrics() -> dict[str, Any]:
 
 
 # ======================================================
+# Weather
+# ======================================================
+
+@app.post("/weather")
+def response(
+    request: WeatherRequest,
+) -> WeatherResponse:
+    """
+    Liefert aktuelle Wetterdaten einer Stadt
+    inklusive ML-Vorhersage.
+    """
+
+    try:
+
+        raw_data = weather_service.get_weather_by_city(
+            city=request.city,
+            language=request.language,
+        )
+
+        response = weather_service.parse_weather_data(
+            raw_data,
+            language=request.language,
+        )
+
+        prediction_result = predictor.predict(
+            {
+                "temperature": response.weather.temperature,
+                "feels_like": response.weather.feels_like,
+                "humidity": response.weather.humidity,
+                "pressure": response.weather.pressure,
+                "wind_speed": response.weather.wind_speed,
+                "clouds": response.weather.clouds,
+                "visibility": response.weather.visibility,
+            }
+        )
+
+        response.prediction = PredictionData(
+
+            value=prediction_result["prediction"],
+
+            model_name=prediction_result["model"],
+
+            features_used=[
+
+                "temperature",
+
+                "feels_like",
+
+                "humidity",
+
+                "pressure",
+
+                "wind_speed",
+
+                "clouds",
+
+                "visibility",
+
+            ],
+
+            prediction_time=datetime.now(UTC),
+
+        )
+
+        session = SessionLocal()
+
+        try:
+
+            repository = WeatherRepository(session)
+
+            repository.save(
+
+                WeatherHistory(
+
+                    city=response.location.city,
+
+                    country=response.location.country,
+
+                    temperature=response.weather.temperature,
+
+                    feels_like=response.weather.feels_like,
+
+                    humidity=response.weather.humidity,
+
+                    pressure=response.weather.pressure,
+
+                    wind_speed=response.weather.wind_speed,
+
+                    prediction=response.prediction.value,
+
+                )
+
+            )
+
+        finally:
+
+            session.close()
+
+
+        return response
+
+    except CityNotFoundError as error:
+
+        raise HTTPException(
+            status_code=404,
+            detail=str(error),
+        ) from error
+
+    except InvalidAPIKeyError as error:
+
+        raise HTTPException(
+            status_code=401,
+            detail=str(error),
+        ) from error
+
+    except WeatherAPIError as error:
+
+        raise HTTPException(
+            status_code=502,
+            detail=str(error),
+        ) from error
+
+
+# ======================================================
 # Prediction
 # ======================================================
 
@@ -329,3 +484,104 @@ def predict(
             detail=str(error),
 
         ) from error
+
+
+
+# ======================================================
+# History
+# ======================================================
+
+@app.get(
+    "/history"
+)
+def history() -> list[dict[str, Any]]:
+    """
+    Liefert alle gespeicherten Vorhersagen.
+    """
+
+    session = SessionLocal()
+
+    try:
+
+        repository = WeatherRepository(
+            session
+        )
+
+        history = repository.get_all()
+
+        return [
+            item.to_dict()
+            for item in history
+        ]
+
+    finally:
+
+        session.close()
+
+
+@app.get(
+    "/history/latest"
+)
+def latest_history() -> dict[str, Any]:
+    """
+    Liefert den neuesten Datensatz.
+    """
+
+    session = SessionLocal()
+
+    try:
+
+        repository = WeatherRepository(
+            session
+        )
+
+        history = repository.get_latest()
+
+        if history is None:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Keine Vorhersagen vorhanden.",
+            )
+
+        return history.to_dict()
+
+    finally:
+
+        session.close()
+
+
+@app.get(
+    "/history/{history_id}"
+)
+def history_by_id(
+    history_id: int,
+) -> dict[str, Any]:
+    """
+    Liefert einen Datensatz anhand seiner ID.
+    """
+
+    session = SessionLocal()
+
+    try:
+
+        repository = WeatherRepository(
+            session
+        )
+
+        history = repository.get_by_id(
+            history_id
+        )
+
+        if history is None:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Datensatz nicht gefunden.",
+            )
+
+        return history.to_dict()
+
+    finally:
+
+        session.close()

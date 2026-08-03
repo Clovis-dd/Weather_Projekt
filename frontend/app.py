@@ -37,7 +37,8 @@ from frontend.backend_client import (
     CityNotFoundError,
     InvalidAPIKeyError,
     BackendConnectionError,
-    BackendTimeoutError
+    BackendTimeoutError,
+    get_prediction_history,
 )
 
 
@@ -72,6 +73,10 @@ logger = get_logger(
     __name__
 )
 
+
+from frontend.components import get_text
+
+import pandas as pd
 
 
 # ======================================================
@@ -610,6 +615,65 @@ def display_weather(
         weather.description.capitalize()
 
     )
+
+    language = st.session_state.language
+
+    st.divider()
+
+    st.subheader(
+        get_text(
+            language,
+            "prediction_history"
+        )
+    )
+
+    try:
+
+        history = get_prediction_history()
+
+        if history:
+
+            history_df = pd.DataFrame(history)
+
+            if not history_df.empty:
+                history_df = history_df.rename(
+                    columns={
+                        "id": get_text(language, "id"),
+                        "city": get_text(language, "city"),
+                        "country": get_text(language, "country"),
+                        "temperature": get_text(language, "temperature"),
+                        "feels_like": get_text(language, "feels_like"),
+                        "humidity": get_text(language, "humidity"),
+                        "pressure": get_text(language, "pressure"),
+                        "wind_speed": get_text(language, "wind_speed"),
+                        "prediction": get_text(language, "prediction"),
+                        "created_at": get_text(language, "created_at"),
+                    }
+                )
+
+                st.dataframe(
+                    history_df,
+                    use_container_width=True,
+                    hide_index=True,
+                )
+
+
+
+        else:
+
+            st.info(
+                get_text(
+                    language,
+                    "no_predictions"
+                )
+            )
+
+
+    except Exception as error:
+
+        st.warning(
+            f"{get_text(language, 'history_error')}: {error}"
+        )
 
 
 # ======================================================

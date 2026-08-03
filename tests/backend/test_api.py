@@ -66,6 +66,10 @@ def valid_weather_payload():
 
     return {
 
+        "city": "Berlin",
+
+        "language": "de",
+
         "temperature":20,
 
         "feels_like":20,
@@ -230,6 +234,8 @@ def test_prediction_endpoint(tmp_path):
         "/predict",
         json=valid_weather_payload(),
     )
+
+    print(response.json())
 
     assert response.status_code == 200
 

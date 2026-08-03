@@ -1,53 +1,97 @@
 """
-status.py
+=========================================================
+Weather Analytics & Machine Learning Platform
+=========================================================
 
-Zeigt den Status der Projektkomponenten.
+Script:
+    status.py
+
+Description:
+    Displays the current status of the application services.
+
+Checks
+------
+- FastAPI Backend
+- Streamlit Dashboard
+
+Author:
+    Clovis Wassom Leugoué
 """
 
 from __future__ import annotations
 
-import socket
+from scripts.bootstrap import initialize
+
+initialize()
+
+from urllib.request import urlopen
+from urllib.error import URLError
+
+from shared.config import settings
 
 
-SERVICES = {
-
-    "Backend": 9000,
-
-    "Streamlit": 8501,
-
-}
+BACKEND_URL = f"http://{settings.HOST}:{settings.PORT}/health"
+FRONTEND_URL = "http://localhost:8501"
 
 
-def running(
-    port: int,
-) -> bool:
+def service_online(url: str) -> bool:
+    """
+    Returns True if the given service is reachable.
+    """
 
-    with socket.socket() as sock:
+    try:
 
-        return sock.connect_ex(
-            ("127.0.0.1", port)
-        ) == 0
+        with urlopen(url, timeout=2):
+
+            return True
+
+    except URLError:
+
+        return False
+
+    except Exception:
+
+        return False
+
+
+def print_status(name: str, online: bool) -> None:
+    """
+    Print a formatted service status.
+    """
+
+    icon = "🟢" if online else "🔴"
+
+    state = "ONLINE" if online else "OFFLINE"
+
+    print(f"{icon} {name:<20} {state}")
 
 
 def main() -> None:
 
+    backend_online = service_online(BACKEND_URL)
+
+    frontend_online = service_online(FRONTEND_URL)
+
     print()
 
-    print("Projektstatus")
+    print("========================================")
+    print(" Weather Analytics Platform")
+    print(" Service Status")
+    print("========================================")
 
-    print("-" * 30)
+    print_status(
+        "FastAPI Backend",
+        backend_online,
+    )
 
-    for name, port in SERVICES.items():
+    print_status(
+        "Streamlit Dashboard",
+        frontend_online,
+    )
 
-        state = (
-            "läuft"
-            if running(port)
-            else "gestoppt"
-        )
+    print("========================================")
 
-        print(
-            f"{name:<12} {state} (Port {port})"
-        )
+    print()
 
 
 if __name__ == "__main__":

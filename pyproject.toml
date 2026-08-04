@@ -1,0 +1,27 @@
+[project]
+
+name = "weather-analytics-platform"
+
+version = "1.0.0"
+
+description = "Production-oriented weather analytics platform with machine learning prediction."
+
+authors = [
+    { name = "Clovis Wassom Leugoué" }
+]
+
+requires-python = ">=3.12"
+
+
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "python-dotenv",
+    "requests",
+    "scikit-learn",
+    "joblib",
+    "pandas",
+    "numpy",
+    "streamlit",
+]

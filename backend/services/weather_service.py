@@ -298,6 +298,7 @@ class WeatherService:
         """
         Wandelt OpenWeatherMap Daten
         in internes Response Modell um.
+        :rtype: WeatherResponse
         """
 
 

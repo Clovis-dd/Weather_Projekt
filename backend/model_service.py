@@ -86,6 +86,28 @@ class ModelService:
 
         return self._model
 
+    def get_model_information(
+            self,
+    ) -> dict:
+
+        champion = self.get_champion()
+
+        if champion is None:
+            return {
+                "model": None,
+                "status": "no champion available",
+            }
+
+        return {
+            "name": champion.name,
+            "filename": champion.filename,
+            "algorithm": champion.algorithm,
+            "metrics": champion.metrics,
+            "features": champion.features,
+            "feature_schema_version":
+                champion.feature_schema_version,
+            "status": champion.status,
+        }
 
 
     def get_champion(

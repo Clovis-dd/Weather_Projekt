@@ -76,9 +76,39 @@ class CoordinatesRequest(BaseModel):
 class PredictionRequest(BaseModel):
     """
     Direkte ML Anfrage.
+
+    Enthält die Wetterfeatures,
+    welche durch das Machine-Learning-Modell
+    verarbeitet werden.
     """
 
-    area: float
+    temperature: float = Field(
+        description="Aktuelle Temperatur in °C"
+    )
+
+    feels_like: float = Field(
+        description="Gefühlte Temperatur in °C"
+    )
+
+    humidity: float = Field(
+        description="Relative Luftfeuchtigkeit in Prozent"
+    )
+
+    pressure: float = Field(
+        description="Luftdruck in hPa"
+    )
+
+    wind_speed: float = Field(
+        description="Windgeschwindigkeit"
+    )
+
+    clouds: float = Field(
+        description="Bewölkungsgrad in Prozent"
+    )
+
+    visibility: float = Field(
+        description="Sichtweite in Metern"
+    )
 
 
 
@@ -170,11 +200,6 @@ class SunData(BaseModel):
 
 
 
-# ======================================================
-# Prediction
-# ======================================================
-
-
 class PredictionData(BaseModel):
     """
     Ergebnis einer Wettervorhersage
@@ -204,9 +229,27 @@ class PredictionData(BaseModel):
 
 
 # ======================================================
-# Response
+# Prediction Response
 # ======================================================
 
+class PredictionResponse(BaseModel):
+    """
+    Response für direkten ML Prediction Endpoint.
+    """
+
+    prediction: float
+
+    model: str | None = None
+
+    features_used: list[str]
+
+    prediction_time: datetime
+
+
+
+# ======================================================
+# Weather Response
+# ======================================================
 
 class WeatherResponse(BaseModel):
     """
@@ -231,6 +274,10 @@ class WeatherResponse(BaseModel):
     language: str = "de"
 
 
+
+# ======================================================
+# Health Response
+# ======================================================
 
 class HealthResponse(BaseModel):
     """
@@ -260,17 +307,37 @@ class HealthResponse(BaseModel):
     utc_time: datetime
 
 
+
+# ======================================================
+# ModelInfo Response
+# ======================================================
+
 class ModelInfoResponse(BaseModel):
+
     name: str
+
     filename: str | None = None
+
     algorithm: str | None = None
+
     metrics: dict[str, float] | None = None
+
     created_at: datetime | None = None
+
     status: str | None = None
 
 
+
+# ======================================================
+# Metrics Response
+# ======================================================
+
 class MetricsResponse(BaseModel):
+
     predictions_total: int
+
     prediction_errors: int
+
     average_latency_ms: float | None = None
+
     last_model_name: str | None = None

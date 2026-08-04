@@ -23,7 +23,7 @@ import csv
 
 
 
-from backend.weather_service import WeatherService
+from backend.services.weather_service import WeatherService
 
 
 from shared.logger import get_logger

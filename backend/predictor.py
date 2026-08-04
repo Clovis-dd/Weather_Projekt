@@ -78,6 +78,7 @@ class WeatherPredictor:
 
         self.pipeline = TrainingPipeline()
 
+
     def prepare_features(
             self,
             dataframe: pd.DataFrame,
@@ -95,7 +96,6 @@ class WeatherPredictor:
         )
 
         return features
-
 
 
     def predict(

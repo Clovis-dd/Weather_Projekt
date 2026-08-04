@@ -3,16 +3,23 @@
 Weather Analytics & Machine Learning Platform
 =========================================================
 
-Stops the FastAPI backend.
+Script:
+    stop_backend.py
+
+Description:
+    Stops the FastAPI backend server.
+
+Author:
+    Clovis Wassom Leugoué
 """
 
 from __future__ import annotations
 
+import psutil
+
 from scripts.bootstrap import initialize
 
-initialize()
-
-import psutil
+PROJECT_ROOT = initialize()
 
 from shared.logger import get_logger
 
@@ -21,22 +28,32 @@ logger = get_logger(__name__)
 
 
 def stop_backend() -> None:
+    """
+    Stop the FastAPI backend server.
+    """
 
-    logger.info("Stopping FastAPI backend...")
+    logger.info(
+        "Stopping FastAPI backend..."
+    )
 
     stopped = False
 
-    for process in psutil.process_iter(["pid", "name", "cmdline"]):
+    for process in psutil.process_iter(["pid", "cmdline"]):
 
         try:
 
-            cmdline = " ".join(process.info["cmdline"] or [])
+            command = " ".join(process.info["cmdline"] or [])
 
-            if "backend.api:app" in cmdline or "uvicorn" in cmdline:
+            if (
+                "uvicorn" in command
+                or "backend.api:app" in command
+            ):
 
                 process.terminate()
 
-                print(f"Stopped backend (PID {process.pid})")
+                print(
+                    f"Stopped backend (PID {process.pid})"
+                )
 
                 stopped = True
 
@@ -44,11 +61,13 @@ def stop_backend() -> None:
             psutil.NoSuchProcess,
             psutil.AccessDenied,
         ):
-            pass
+            continue
 
     if not stopped:
 
-        print("Backend is not running.")
+        print(
+            "Backend is not running."
+        )
 
 
 if __name__ == "__main__":

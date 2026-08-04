@@ -139,6 +139,7 @@ class WeatherHistory(Base):
             ")"
         )
 
+
     def to_dict(
             self,
     ) -> dict[str, Any]:
